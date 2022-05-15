@@ -68,8 +68,10 @@ def checarHoras(recon):
 def checarPrevisaoTempo(recon):
   falar('De qual cidade?')
   cidade = ouvir(recon)
-  falar('Vou mostrar para você a previsão do tempo da cidade de '+cidade)
-  abrirNavegador('https://www.google.com/search?q=previsão+do+tempo '+cidade)
+  falar('Qual o dia?')
+  dia = ouvir(recon)
+  falar('Vou mostrar para você a previsão do tempo da cidade de '+cidade+' para '+dia)
+  abrirNavegador('https://www.google.com/search?q=previsão+do+tempo '+cidade+' '+dia)
   
 def classificacaoBrasileirao(recon):
   falar('Vou mostrar para você a tabela do brasileirão série A')
@@ -86,7 +88,7 @@ def mapearComandos(comando, recon):
     ('ler agenda', 'ver agenda', 'quero ver agenda', 'quero ler minha agenda', 'abrir agenda'): lerAgenda,
     ('cadastrar evento na agenda', 'cadastrar novo evento na agenda', 'cadastrar evento'): cadastrarEventoAgenda,
     ('checar as horas', 'que horas são', 'checar horário'): checarHoras,
-    ('checar previsão do tempo', 'como vai estar o tempo hoje', 'como está o clima hoje', 'como está o clima'): checarPrevisaoTempo,
+    ('checar previsão do tempo', 'checar a previsão do tempo', 'como vai estar o tempo', 'como está o clima'): checarPrevisaoTempo,
     ('classificação do brasileirão', 'tabela do brasileirão'): classificacaoBrasileirao,
     ('canta parabéns', 'me cante parabéns', 'canta parabéns ai', 'sabe cantar parabéns'): cantarParabens
   }
