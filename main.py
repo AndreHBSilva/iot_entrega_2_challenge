@@ -74,14 +74,19 @@ def checarPrevisaoTempo(recon):
   abrirNavegador('https://www.google.com/search?q=previsão+do+tempo '+cidade)
   
 def classificacaoBrasileirao(recon):
-  falar('Qual ')
+  falar('Vou mostrar para você a tabela do brasileirão série A')
+  abrirNavegador('https://www.google.com/search?q=brasileirao%20série%20A#sie=lg;/g/11sfc7_5p3;2;/m/0fnk7q;st;fp;1;;')
+  
+def nomesVingadores(recon):
+  return
 
 def mapearComandos(comando, recon):
   comandos = {
     ('ler agenda', 'ver agenda', 'quero ver agenda', 'quero ler minha agenda', 'abrir agenda'): lerAgenda,
     ('cadastrar evento na agenda', 'cadastrar novo evento na agenda', 'cadastrar evento'): cadastrarEventoAgenda,
     ('checar as horas', 'que horas são', 'checar horário'): checarHoras,
-    ('checar previsão do tempo', 'como vai estar o tempo hoje', 'como está o clima hoje', 'como está o clima'): checarPrevisaoTempo
+    ('checar previsão do tempo', 'como vai estar o tempo hoje', 'como está o clima hoje', 'como está o clima'): checarPrevisaoTempo,
+    ('classificação do brasileirão', 'tabela do brasileirão'): classificacaoBrasileirao
   }
   for key, value in comandos.items():
     if comando.lower() in key:
