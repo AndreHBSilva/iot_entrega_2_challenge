@@ -5,7 +5,7 @@ import speech_recognition as sr
 import webbrowser as wb
 import pygame
 import pyttsx3
-import linecache
+import random
 
 def abrirNavegador(link):
   wb.open_new_tab(link)
@@ -78,7 +78,18 @@ def classificacaoBrasileirao(recon):
   abrirNavegador('https://www.google.com/search?q=brasileirao%20série%20A#sie=lg;/g/11sfc7_5p3;2;/m/0fnk7q;st;fp;1;;')
 
 def cantarParabens(recon):
-  falar('Parabéns pra você, nesta data querida! Muitas felicidades, muitos anos de vida.')  
+  falar('Parabéns pra você, nesta data querida! Muitas felicidades, muitos anos de vida.')
+  
+def contarPiada(recon):
+  bancoPiadas = (
+    'Chefe, quero um aumento. Saiba o senhor que tem três empresas atrás de mim. Quais? A de água, a de luz e a de telefone.',
+    'Sabe o que o melão estava fazendo de mãos dadas com o mamão perto de Copacabana? Levando o mamão papaya.',
+    'Quanto é o cafézinho? 2 reais. E o açúcar? O açúcar a gente não cobra. Então pode me ver 2 quilos, por favor.',
+    'Esse salgado é de hoje? Não, é de ontem. E como faço para comer o de hoje? Volte amanhã!',
+    'Fiquei confuso depois da aula de inglês. Se “car” significa carro e “men” significa “homens”, então minha tia Carmen é um Transformer?'
+    )
+  piada = random.choice(bancoPiadas)
+  falar(piada)
   
 def nomesVingadores(recon):
   return
@@ -90,7 +101,8 @@ def mapearComandos(comando, recon):
     ('checar as horas', 'que horas são', 'checar horário'): checarHoras,
     ('checar previsão do tempo', 'checar a previsão do tempo', 'como vai estar o tempo', 'como está o clima'): checarPrevisaoTempo,
     ('classificação do brasileirão', 'tabela do brasileirão'): classificacaoBrasileirao,
-    ('canta parabéns', 'me cante parabéns', 'canta parabéns ai', 'sabe cantar parabéns'): cantarParabens
+    ('canta parabéns', 'me cante parabéns', 'canta parabéns ai', 'sabe cantar parabéns'): cantarParabens,
+    ('piada', 'me conta uma piada', 'me conte uma piada', 'me conta outra piada', 'me conte outra piada', 'sabe contar piada', 'sabe contar piadas'): contarPiada
   }
   for key, value in comandos.items():
     if comando.lower() in key:
