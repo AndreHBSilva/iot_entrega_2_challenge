@@ -29,7 +29,18 @@ def cadastrarEventoAgenda():
 def lerAgenda():
   return 'Lendo agenda...'
 
-def 
+def checarHoras():
+  return 'Checando horas...'
+
+def mapearComandos(comando):
+  comandos = {
+    ('ler agenda', 'quero ler minha agenda', 'abrir agenda'): lerAgenda,
+    ('cadastrar evento na agenda', 'cadastrar novo evento na agenda', 'cadastrar evento'): cadastrarEventoAgenda,
+    ('checar as horas', 'que horas são', 'checar horário'): checarHoras
+  }
+  for key, value in comandos.items():
+    if comando.lower() in key:
+      return value()
 
 
 recon = sr.Recognizer()
@@ -39,6 +50,7 @@ with sr.Microphone() as source:
   recon.adjust_for_ambient_noise(source, duration=4)
   while True:
     try:
+      print(mapearComandos('QUERO LER MINHA AGENDA'))
       falar(detectarPeriodoDoDia()+', mestre. Como posso ajudá-lo?')
       print('Fale algo...')
       audio = recon.listen(source)
