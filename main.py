@@ -59,13 +59,11 @@ def lerAgenda(recon):
   except OSError:
     print('Arquivo de agenda não encontrado')
 
-
 def checarHoras(recon):
   horas = datetime.today().strftime('%H')
   minutos = datetime.today().strftime('%M')
   segundos = datetime.today().strftime('%S')
   falar('Agora são '+horas+' horas e '+minutos+' minutos e '+segundos+' segundos')
-  return 'Checando horas...'
 
 def checarPrevisaoTempo(recon):
   falar('De qual cidade?')
@@ -76,6 +74,9 @@ def checarPrevisaoTempo(recon):
 def classificacaoBrasileirao(recon):
   falar('Vou mostrar para você a tabela do brasileirão série A')
   abrirNavegador('https://www.google.com/search?q=brasileirao%20série%20A#sie=lg;/g/11sfc7_5p3;2;/m/0fnk7q;st;fp;1;;')
+
+def cantarParabens(recon):
+  falar('Parabéns pra você, nesta data querida! Muitas felicidades, muitos anos de vida.')  
   
 def nomesVingadores(recon):
   return
@@ -86,7 +87,8 @@ def mapearComandos(comando, recon):
     ('cadastrar evento na agenda', 'cadastrar novo evento na agenda', 'cadastrar evento'): cadastrarEventoAgenda,
     ('checar as horas', 'que horas são', 'checar horário'): checarHoras,
     ('checar previsão do tempo', 'como vai estar o tempo hoje', 'como está o clima hoje', 'como está o clima'): checarPrevisaoTempo,
-    ('classificação do brasileirão', 'tabela do brasileirão'): classificacaoBrasileirao
+    ('classificação do brasileirão', 'tabela do brasileirão'): classificacaoBrasileirao,
+    ('canta parabéns', 'me cante parabéns', 'canta parabéns ai', 'sabe cantar parabéns'): cantarParabens
   }
   for key, value in comandos.items():
     if comando.lower() in key:
