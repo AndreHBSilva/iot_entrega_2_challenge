@@ -23,19 +23,41 @@ def detectarPeriodoDoDia():
   else:
     return 'Boa noite'
 
-def cadastrarEventoAgenda():
-  falar('Cadastrando evento na agenda...')
-  return 'Cadastrando evento na agenda...'
+def cadastrarEventoAgenda(recon):
+  try:
+    falar('Ok, qual o nome do evento que devo cadastrar?')
+    nomeEvento = ouvir(recon)
+    engine.runAndWait()
+    falar('Para qual dia?')
+    diaEvento = ouvir(recon)
+    engine.runAndWait()
+    falar('Para que horas?')
+    horarioEvento = ouvir(recon)
+    engine.runAndWait()
+    falar('Tudo certo, o seu evento foi cadastrado!')
+    engine.runAndWait()
+    f = open('agenda.txt', 'a', encoding='utf-8')
+    f.write('Você tem o evento '+nomeEvento+' às '+horarioEvento+' no dia '+diaEvento+'\n')
+    f.close()
+  except OSError:
+    print('Arquivo de agenda não encontrado')
 
-def lerAgenda():
-  falar('Lendo agenda...')
-  return 'Lendo agenda...'
 
-def checarHoras():
+def lerAgenda(recon):
+  try:
+    f = open('agenda.txt', 'r', encoding='utf-8')
+    for line in f:
+      falar(line)
+    f.close()
+  except OSError:
+    print('Arquivo de agenda não encontrado')
+
+
+def checarHoras(recon):
   falar('Checando horas...')
   return 'Checando horas...'
 
-def mapearComandos(comando):
+def mapearComandos(comando, recon):
   comandos = {
     ('ler agenda', 'ver agenda', 'quero ver agenda', 'quero ler minha agenda', 'abrir agenda'): lerAgenda,
     ('cadastrar evento na agenda', 'cadastrar novo evento na agenda', 'cadastrar evento'): cadastrarEventoAgenda,
@@ -43,7 +65,7 @@ def mapearComandos(comando):
   }
   for key, value in comandos.items():
     if comando.lower() in key:
-      return value()
+      return value(recon)
     
 def ouvir(recon):
   print('Fale algo...')
@@ -54,10 +76,12 @@ def ouvir(recon):
 
 
 recon = sr.Recognizer()
+recon.energy_threshold = 50
+recon.dynamic_energy_threshold = False
 engine = pyttsx3.init()
 pygame.mixer.init()
 with sr.Microphone() as source:
-  recon.adjust_for_ambient_noise(source, duration=4)
+  recon.adjust_for_ambient_noise(source, duration=3)
   while True:
     try:
       comando = ouvir(recon)
@@ -66,7 +90,7 @@ with sr.Microphone() as source:
         print(comando)
         esperar = input('Pressione Enter para continuar...')
         comando = ouvir(recon)
-        mapearComandos(comando)
+        mapearComandos(comando, recon)
         print(comando)
         esperar = input('Pressione Enter para continuar...')
     except sr.UnknownValueError:
@@ -78,5 +102,3 @@ with sr.Microphone() as source:
     except KeyError:
       print('\n Comando não encontrado')
       continue
-
-#print('hello world')
