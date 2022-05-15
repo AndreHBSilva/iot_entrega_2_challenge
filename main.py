@@ -91,8 +91,10 @@ def contarPiada(recon):
   piada = random.choice(bancoPiadas)
   falar(piada)
   
-def nomesVingadores(recon):
-  return
+def qualOSeuVingadorFavorito(recon):
+  falar('EU GOSTO DO HOMEM DE FERRO, PORQUE ELE CRIOU O AMOR DA MINHA VIDA, O JARVIS. E VOCÊ QUAL É SEU VINGADOR FAVORITO.')
+  vingadorFavorito = ouvir(recon)
+  falar(vingadorFavorito+'. Ótima escolha. Confio em todos para salvar o mundo.')
 
 def mapearComandos(comando, recon):
   comandos = {
@@ -102,8 +104,10 @@ def mapearComandos(comando, recon):
     ('checar previsão do tempo', 'checar a previsão do tempo', 'como vai estar o tempo', 'como está o clima'): checarPrevisaoTempo,
     ('classificação do brasileirão', 'tabela do brasileirão'): classificacaoBrasileirao,
     ('canta parabéns', 'me cante parabéns', 'canta parabéns ai', 'sabe cantar parabéns'): cantarParabens,
-    ('piada', 'me conta uma piada', 'me conte uma piada', 'me conta outra piada', 'me conte outra piada', 'sabe contar piada', 'sabe contar piadas'): contarPiada
+    ('piada', 'me conta uma piada', 'me conte uma piada', 'me conta outra piada', 'me conte outra piada', 'sabe contar piada', 'sabe contar piadas'): contarPiada,
+    ('qual seu vingador favorito', 'de qual vingador você gosta mais', 'de qual vingador você mais gosta', 'qual seu vingador preferido'): qualOSeuVingadorFavorito
   }
+  
   for key, value in comandos.items():
     if comando.lower() in key:
       return value(recon)
