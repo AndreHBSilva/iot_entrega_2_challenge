@@ -31,7 +31,7 @@ def ouvir():
   Ouve o que o usuário falou e transcreve para texto, retornando esse texto.
 
   Returns:
-      comando (str): Áudio capturado por microfone transcrito.
+      comando (str): Transcrição do áudio capturado.
   """
   audio = recon.listen(source)
   print('Reconhecendo...')
@@ -170,6 +170,12 @@ def lerHistoricoCompras():
     raise IOError('Arquivo não encontrado')
 
 def excluirCartao():
+  """
+  Exclui o cartão desejado da carteira.
+
+  Raises:
+      IOError: Aciona essa exception caso o arquivo carteira.json não seja encontrado.
+  """
   try:
     if exists('carteira.json') == False:
       falar('Nenhum cartão foi encontrado.')
@@ -188,7 +194,7 @@ def excluirCartao():
         time.sleep(3)
         for cartao in data["cartoes"]:
           if numeroCartao.replace(" ", "") == cartao["numero"].replace(" ", ""):
-            del cartao
+            data["cartoes"].remove(cartao)
             falar("Cartão "+numeroCartao+" removido!")
             file = open('carteira.json', 'w')
             json.dump(data, file)
@@ -198,6 +204,7 @@ def excluirCartao():
         
         if cartaoEncontrado == False:
           falar("Nenhum cartão com esse número foi encontrado.")
+          time.sleep(6)
           
   except IOError:
     raise IOError('Arquivo não encontrado')
@@ -225,23 +232,46 @@ def mapearComandos(comando):
     print(comando.lower())
     if comando.lower() in key:
       return value()
-    
+
+''' 
+Passando parâmetros de captura para o reconhecedor de voz.
+'''
 recon.energy_threshold = 180
 recon.dynamic_energy_threshold = False
+
+'''
+Inicializando o microfone do SpeechRecognition.
+'''
 with sr.Microphone() as source:
   recon.adjust_for_ambient_noise(source, duration=3)
   while True:
     try:
       falar('O que deseja fazer?')
+      '''
+      Ouvir o comando que o usuário deseja executar.
+      '''
       comando = ouvir()
+      '''
+      Passa o comando para a função mapearComandos, que realiza uma busca no dicionário de comandos
+      e verifica se aquele comando existe.
+      '''
       mapearComandos(comando)
     except sr.UnknownValueError:
+      '''
+      Exceção gerado caso não reconheça o que foi falado. Por exemplo, ruídos.
+      '''
       print('\nTente novamente')
       continue
     except KeyboardInterrupt:
+      '''
+      Finaliza o programa com interrupção do teclado.
+      '''
       print('\nEncerrando...')
       break
     except KeyError:
+      '''
+      Exceção gerada caso o que foi capturado não esteja de acordo com os comandos existentes.
+      '''
       falar('Comando não encontrado.')
       time.sleep(3)
       print('\n Comando não encontrado')
