@@ -1,0 +1,6 @@
+{
+  "historico": [
+    {"dataCompra": "22/01/2022", "horarioCompra": "14:21", "estabelecimento": "Quitanda do Zé", "cartaoUtilizado": "53824099 9373 8608", "valorCompra": "25,00"},
+    {"dataCompra": "25/03/2022", "horarioCompra": "15:30", "estabelecimento": "Mercadinho", "cartaoUtilizado": "53824099 9373 8608", "valorCompra": "300,00"}
+  ]
+}
