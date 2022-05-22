@@ -8,7 +8,7 @@ import random
 import json
 
 recon = sr.Recognizer()
-recon.energy_threshold = 120
+recon.energy_threshold = 150
 recon.dynamic_energy_threshold = False
 pygame.mixer.init()
 fraseConfirmacao = ' Essa informação está correta?'
@@ -38,6 +38,7 @@ def ouvir():
   audio = recon.listen(source)
   print('Reconhecendo...')
   comando = recon.recognize_google(audio, language='pt')
+  print(comando)
   return comando
 
 def cadastrarCartao():
@@ -162,10 +163,8 @@ with sr.Microphone() as source:
     try:
       falar('O que deseja fazer?')
       comando = ouvir()
-      print(comando)
       #esperar = input('Pressione Enter para continuar...')
       mapearComandos(comando)
-      print(comando)
       #esperar = input('Pressione Enter para continuar...')
     except sr.UnknownValueError:
       print('\nTente novamente')
