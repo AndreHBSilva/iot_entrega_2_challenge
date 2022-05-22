@@ -9,27 +9,15 @@ import time
 import cv2
 import sys
 
-'''
-Importamos a biblioteca OS porque estavamos tendo muito problema com a maneira de passar o 
-caminho dos arquivos para o python, então utilizando o metodo getcwd, ele nos retorna o caminho onde
-estamos executando a aplicação, e dessa forma, trabalhar com os diretorios que queremos informar, como
-foi no caso das imagens.
-
-cwd = os.getcwd()
-print("Current working directory is:", cwd)
-os.chdir('C:\Sprint2\cascades')
-os.chdir('C:\Sprint2\images')
-'''
-
 #este é o classificador provido pelo OpenCV, para detectar rostos
 classificadorFace = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 '''Aqui existem uma serie de imagens, com diferentes graus de complexidade para testes..'''
-#imgPath = 'C:/Sprint2/images/Rostos.jpg'
+#imgPath = './images/Rostos.jpg'
+#imgPath = './images/testeDeFogo3.jpg'
+#imgPath = './images/testeDeFogo4.jpg'
+#imgPath = './images/negativa.jpg'
 imgPath = './images/testeDeFogo2.jpg'
-#imgPath = 'C:/Sprint2/images/testeDeFogo3.jpg'
-#imgPath = 'C:/Sprint2/images/testeDeFogo4.jpg'
-#imgPath = 'C:/Sprint2/images/negativa.jpg'
 
 #este metodo lê a imagem que passamos na variavel acima, que recebeu o endereço da imagem
 img = cv2.imread(imgPath)
