@@ -1,6 +1,5 @@
 from gtts import gTTS
 from io import BytesIO
-from datetime import datetime
 from os.path import exists
 import speech_recognition as sr
 import pygame
@@ -149,8 +148,6 @@ def cadastrarCartao():
         break
       
       except sr.UnknownValueError:
-        falar('Desculpe, não entendi o que disse.')
-        time.sleep(3)
         continue
       
   except IOError:
