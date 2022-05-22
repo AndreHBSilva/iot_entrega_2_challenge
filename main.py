@@ -6,9 +6,65 @@ import speech_recognition as sr
 import pygame
 import json
 import time
+import cv2
+import sys
 
+'''
+Importamos a biblioteca OS porque estavamos tendo muito problema com a maneira de passar o 
+caminho dos arquivos para o python, então utilizando o metodo getcwd, ele nos retorna o caminho onde
+estamos executando a aplicação, e dessa forma, trabalhar com os diretorios que queremos informar, como
+foi no caso das imagens.
+
+cwd = os.getcwd()
+print("Current working directory is:", cwd)
+os.chdir('C:\Sprint2\cascades')
+os.chdir('C:\Sprint2\images')
+'''
+
+#este é o classificador provido pelo OpenCV, para detectar rostos
+classificadorFace = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+'''Aqui existem uma serie de imagens, com diferentes graus de complexidade para testes..'''
+#imgPath = 'C:/Sprint2/images/Rostos.jpg'
+imgPath = './images/testeDeFogo2.jpg'
+#imgPath = 'C:/Sprint2/images/testeDeFogo3.jpg'
+#imgPath = 'C:/Sprint2/images/testeDeFogo4.jpg'
+#imgPath = 'C:/Sprint2/images/negativa.jpg'
+
+#este metodo lê a imagem que passamos na variavel acima, que recebeu o endereço da imagem
+img = cv2.imread(imgPath)
+
+''' Adotamos uma metodologia antiga com o Haar Cascade, onde ele detecta as bordas e linhas 
+da imagem, porém apenas em escala de CINZA, de acordo com o banco de dados de imagens que consta
+no xml, esta metodologia de classificação é anterior ao Deep Learning.'''
+
+#aqui convertemos nossa imagem colorida para tons de cinza.
+imagemCinza = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+#este algoritmo identifica as faces na imagem que foi informada para detecção multi escalar,
+#seguindo as regras do classificador informado no inicio do codigo.
+rostos = classificadorFace.detectMultiScale(imagemCinza)
+'''
+Aqui é desenhado um quadrado onde cada rosto foi identificado na imagem com as propriedades abaixo:
+(0,255,0) é a cor do retangulo (AZUL)
+2 é a grossura da linha
+l é a largura do quadrado da face
+a é a altura
+x é o ponto inicial no eixo horizontal
+y é o ponto inicial no eixo vertical'''
+for (x,y,l,a) in rostos:
+    img = cv2.rectangle(img, (x,y), (x+l, y+a), (255,0, 0),1)
+
+'''------------------------------------------------------------
+  MÉTODOS PARA DETECÇÃO E SINTETIZAÇÃO DE VOZ.
+'''
+
+'''Inicializando o reconhecedor de voz.'''
 recon = sr.Recognizer()
+
+'''Inicializando o mixer que irá reproduzir os áudios sintetizados.'''
 pygame.mixer.init()
+
 fraseConfirmacao = ' Essa informação está correta?'
 
 def falar(texto, language='pt'):
@@ -208,6 +264,14 @@ def excluirCartao():
           
   except IOError:
     raise IOError('Arquivo não encontrado')
+  
+def encerrar():
+  """
+  Comando para encerrar/terminar aplicação.
+  """
+  falar('Encerrando aplicação. Até logo!')
+  time.sleep(5)
+  sys.exit()
 
 def mapearComandos(comando):
   """
@@ -222,14 +286,13 @@ def mapearComandos(comando):
   """
   comandos = {
     ('abrir histórico de compras', 'ver histórico de compras', 'histórico de compras'): lerHistoricoCompras,
-    ('cadastrar novo cartão', 'cadastrar cartão', 'cadastrar cartão de crédito'): cadastrarCartao,
+    ('cadastrar novo cartão', 'cadastrar meu cartão', 'cadastrar cartão', 'cadastrar cartão de crédito'): cadastrarCartao,
     ('ver cartões cadastrados', 'consultar cartões cadastrados', 'consultar cartões'): consultarCartoesCadastrados,
-    ('deletar cartão', 'excluir cartão', 'remover cartão'): excluirCartao
+    ('deletar cartão', 'excluir cartão', 'remover cartão'): excluirCartao,
+    ('encerrar', 'sair da aplicação', 'encerrar aplicação', 'fechar aplicação'): encerrar
   }
   
   for key, value in comandos.items():
-    print(key)
-    print(comando.lower())
     if comando.lower() in key:
       return value()
 
@@ -241,38 +304,46 @@ recon.dynamic_energy_threshold = False
 
 '''
 Inicializando o microfone do SpeechRecognition.
+A partir deste momento, se o algoritmo identificar que existe um rosto humano identificado, ele 
+prossegue para o assistente de voz.
 '''
-with sr.Microphone() as source:
-  recon.adjust_for_ambient_noise(source, duration=3)
-  while True:
-    try:
-      falar('O que deseja fazer?')
-      '''
-      Ouvir o comando que o usuário deseja executar.
-      '''
-      comando = ouvir()
-      '''
-      Passa o comando para a função mapearComandos, que realiza uma busca no dicionário de comandos
-      e verifica se aquele comando existe.
-      '''
-      mapearComandos(comando)
-    except sr.UnknownValueError:
-      '''
-      Exceção gerado caso não reconheça o que foi falado. Por exemplo, ruídos.
-      '''
-      print('\nTente novamente')
-      continue
-    except KeyboardInterrupt:
-      '''
-      Finaliza o programa com interrupção do teclado.
-      '''
-      print('\nEncerrando...')
-      break
-    except KeyError:
-      '''
-      Exceção gerada caso o que foi capturado não esteja de acordo com os comandos existentes.
-      '''
-      falar('Comando não encontrado.')
-      time.sleep(3)
-      print('\n Comando não encontrado')
-      continue
+if len(rostos) > 0:
+  cv2.imshow("Faces detectadas", img)
+  print('Rosto detectado!')
+  print('Pressione qualquer tecla para continuar...')
+  cv2.waitKey(0)
+  cv2.destroyAllWindows()
+  with sr.Microphone() as source:
+    recon.adjust_for_ambient_noise(source, duration=3)
+    while True:
+      try:
+        falar('O que deseja fazer?')
+        '''
+        Ouvir o comando que o usuário deseja executar.
+        '''
+        comando = ouvir()
+        '''
+        Passa o comando para a função mapearComandos, que realiza uma busca no dicionário de comandos
+        e verifica se aquele comando existe.
+        '''
+        mapearComandos(comando)
+      except sr.UnknownValueError:
+        '''
+        Exceção gerado caso não reconheça o que foi falado. Por exemplo, ruídos.
+        '''
+        print('\nTente novamente')
+        continue
+      except KeyboardInterrupt:
+        '''
+        Finaliza o programa com interrupção do teclado.
+        '''
+        print('\nEncerrando...')
+        break
+      except KeyError:
+        '''
+        Exceção gerada caso o que foi capturado não esteja de acordo com os comandos existentes.
+        '''
+        falar('Comando não encontrado.')
+        time.sleep(3)
+        print('\n Comando não encontrado')
+        continue
