@@ -1,7 +1,7 @@
 # iot_entrega_2_challenge
 
 ## Link do vídeo
-Link do vídeo de demosntração: https://youtu.be/YTQV9JPv59c
+Link do vídeo de demonstração: https://youtu.be/YTQV9JPv59c
 
 ## Nome do grupo 
 TNT Solutions
